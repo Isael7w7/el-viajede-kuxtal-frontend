@@ -1,0 +1,22 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Estilos globales base para El Viaje de Kuxtal */
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #f4e9d8; /* Color Kuxtal Arena por defecto */
+  font-family: "Nunito Sans", sans-serif;
+  color: #212529;
+  overflow-x: hidden;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: "Poppins", sans-serif;
+}
