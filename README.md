@@ -1,50 +1,56 @@
-# React + TypeScript + Vite
+# 🌿 El Viaje de Kuxtal - Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Aplicación web para el proyecto "El Viaje de Kuxtal", construida con React, TypeScript y Vite.
 
-Currently, two official plugins are available:
+## 🛠️ Tecnologías
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **React 18** - Framework de UI
+- **TypeScript** - Tipado estático
+- **Vite** - Bundler y dev server
+- **Tailwind CSS** - Estilos utilitarios
+- **Zustand** - Manejo de estado
+- **Lucide React** - Iconos
+- **Canvas Confetti** - Efectos visuales
 
-## Expanding the ESLint configuration
+## 📦 Instalación
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+```bash
+# Instalar dependencias
+pnpm install
 
-- Configure the top-level `parserOptions` property like this:
+# Iniciar servidor de desarrollo
+pnpm dev
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+# Build para producción
+pnpm build
+
+# Vista previa del build
+pnpm preview
 ```
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+## 📁 Estructura
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
-
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
 ```
+├── src/
+│   ├── assets/       # Imágenes y recursos estáticos
+│   ├── App.tsx       # Componente principal
+│   ├── main.tsx      # Punto de entrada
+│   └── index.css     # Estilos globales
+├── public/           # Archivos públicos estáticos
+├── index.html        # HTML principal
+├── vite.config.ts    # Configuración de Vite
+├── tailwind.config.js # Configuración de Tailwind
+└── tsconfig.json     # Configuración de TypeScript
+```
+
+## 🚀 Desarrollo
+
+El servidor de desarrollo usa HMR (Hot Module Replacement) para actualizaciones en tiempo real.
+
+```bash
+pnpm dev
+```
+
+## 📝 Licencia
+
+Proyecto privado.
