@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import { Sparkles } from 'lucide-react';
 import { useJuegoStore } from '../store/useJuegoStore';
 import { registrarJugador } from '../servicios/apiJuego';
+import { LOGOTIPOS_ASSETS } from '../assets/Logotipos';
 
 export default function EscenaInicio() {
   const [nombre, setNombre] = useState('');
@@ -35,9 +35,11 @@ export default function EscenaInicio() {
 
   return (
     <div className="flex flex-col items-center justify-center gap-6 py-10 px-4">
-      <div className="w-20 h-20 rounded-full bg-kuxtalVerde/20 flex items-center justify-center">
-        <Sparkles size={40} className="text-kuxtalVerde" />
-      </div>
+      <img
+        src={LOGOTIPOS_ASSETS.principal}
+        alt="El Viaje de Kuxtal"
+        className="w-44 tablet:w-52 object-contain"
+      />
 
       <div className="text-center">
         <h2 className="font-titulo text-2xl tablet:text-3xl font-bold text-kuxtalVerde mb-2">

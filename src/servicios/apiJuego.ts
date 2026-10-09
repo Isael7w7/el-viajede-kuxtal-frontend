@@ -1,4 +1,4 @@
-import type { DatosRespuesta, MetricasResumen } from '../tipos/juego';
+import type { DatosRespuesta, ResumenMetricas } from '../tipos/juego';
 
 const BASE_URL = 'http://localhost:3000/api';
 
@@ -39,5 +39,5 @@ export async function finalizarNivel(idJugador: string, tiempoTotalSegundos: num
 
 export async function obtenerMetricas(idJugador: string) {
   const respuesta = await fetch(`${BASE_URL}/metricas/resumen/${idJugador}`);
-  return manejarRespuesta<MetricasResumen>(respuesta);
+  return manejarRespuesta<ResumenMetricas>(respuesta);
 }

@@ -51,15 +51,28 @@ export const useJuegoStore = create<JuegoState>((set) => ({
       },
     })),
 
-  registrarRespuesta: (correcta, saludable) =>
-    set((state) => ({
-      progreso: {
-        ...state.progreso,
-        respuestasCorrectas: state.progreso.respuestasCorrectas + (correcta ? 1 : 0),
-        eleccionesSaludables: state.progreso.eleccionesSaludables + (saludable ? 1 : 0),
-        erroresCometidos: state.progreso.erroresCometidos + (!correcta ? 1 : 0),
-      },
-    })),
+  registrarRespuesta: (esCorrecta, esEstrategiaSaludable) =>
+    set((state) => {
+      const esPositiva = esCorrecta || esEstrategiaSaludable;
+      const deltaEquilibrio = esPositiva ? 1 : -2;
+      const nuevoEquilibrio = Math.min(
+        100,
+        Math.max(0, state.progreso.equilibrioEmocional + deltaEquilibrio),
+      );
+
+      return {
+        progreso: {
+          ...state.progreso,
+          equilibrioEmocional: nuevoEquilibrio,
+          respuestasCorrectas:
+            state.progreso.respuestasCorrectas + (esCorrecta ? 1 : 0),
+          eleccionesSaludables:
+            state.progreso.eleccionesSaludables + (esEstrategiaSaludable ? 1 : 0),
+          erroresCometidos:
+            state.progreso.erroresCometidos + (!esPositiva ? 1 : 0),
+        },
+      };
+    }),
 
   finalizarNivel: (cristalObtenido) =>
     set((state) => ({

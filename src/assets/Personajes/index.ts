@@ -1,16 +1,16 @@
 import kuxtalIdle from './P001_Kuxtal_idle.png';
-import kuxtalHappy from './P002_kuxtal_happy.png';
-import kuxtalThinking from './P003_kuxtal_thinking.png';
-import kuxtalSorprendido from './P004_kuxtal_sorprendido.png';
-import kuxtalPreocupado from './P005_kuxtal_preocupado.png';
+import kuxtalHappy from './P002_kuxtal_happy-sinfondo.png';
+import kuxtalThinking from './P003_kuxtal_thinking-sinfondo.png';
+import kuxtalSorprendido from './P004_kuxtal_sorprendido-sinfondo.png';
+import kuxtalPreocupado from './P005_kuxtal_preocupado-sinfondo.png';
 
 import ixchelNeutral from './P006_Ixchel_Neutral.png';
-import ixchelExplicando from './P007_Ixchel_Explicando.png';
-import ixchelSonriendo from './P008_Ixchel_Sonriendo.png';
+import ixchelExplicando from './P007_Ixchel_Explicando-sinfondo.png';
+import ixchelSonriendo from './P008_Ixchel_Sonriendo-sinfondo.png';
 
-import nohEkAnsioso from './P009_Noh_Ek_Ansioso.png';
-import nohEkNeutral from './P010_Noh_Ek_Neutral.png';
-import nohEkSereno from './P011_Noh_Ek_Sereno.png';
+import nohEkAnsioso from './P009_Noh_Ek_Ansioso-sinfondo.png';
+import nohEkNeutral from './P010_Noh_Ek_Neutral-sinfondo.png';
+import nohEkSereno from './P011_Noh_Ek_Sereno-sinfondo.png';
 
 export const PERSONAJES_ASSETS = {
   kuxtal: {

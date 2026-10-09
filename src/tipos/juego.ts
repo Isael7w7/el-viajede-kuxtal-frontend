@@ -32,17 +32,25 @@ export interface ActividadEmocional {
 export interface DatosRespuesta {
   idJugador: string;
   idActividad: number;
-  respuestaSeleccionada: number;
+  respuestaSeleccionada: string;
   esCorrecta: boolean;
   esEstrategiaSaludable: boolean;
   tiempoRespuestaSegundos: number;
 }
 
-export interface MetricasResumen {
-  totalRespuestas: number;
-  respuestasCorrectas: number;
-  eleccionesSaludables: number;
-  equilibrioEmocional: number;
-  cristalObtenido: boolean;
-  tiempoTotalSegundos: number;
+export interface RespuestaJugador {
+  idRespuesta: string;
+  idJugador: string;
+  idActividad: number;
+  respuestaSeleccionada: string;
+  esCorrecta: boolean;
+  esEstrategiaSaludable: boolean;
+  tiempoRespuestaSegundos: number | null;
+  fechaRegistro: string;
+}
+
+export interface ResumenMetricas {
+  jugador: Jugador;
+  progreso: ProgresoNivel;
+  respuestas: RespuestaJugador[];
 }

@@ -1,5 +1,6 @@
 import { useJuegoStore } from '../store/useJuegoStore';
-import { Mountain, Gem } from 'lucide-react';
+import { Gem } from 'lucide-react';
+import { LOGOTIPOS_ASSETS } from '../assets/Logotipos';
 
 export default function HeaderJuego() {
   const { nombreUsuario, progreso } = useJuegoStore();
@@ -9,7 +10,11 @@ export default function HeaderJuego() {
     <header className="w-full bg-white/80 backdrop-blur-sm rounded-2xl shadow-md p-4 mb-4 border border-kuxtalTurquesa/20">
       <div className="flex items-center justify-between mb-2">
         <div className="flex items-center gap-2">
-          <Mountain className="w-5 h-5 text-kuxtalTurquesa" />
+          <img
+            src={LOGOTIPOS_ASSETS.isotipo}
+            alt="Isotipo Kuxtal"
+            className="w-7 h-7 object-contain"
+          />
           <h2 className="font-titulo text-sm tablet:text-base font-bold text-kuxtalVerde">
             Valle de la Ansiedad
           </h2>

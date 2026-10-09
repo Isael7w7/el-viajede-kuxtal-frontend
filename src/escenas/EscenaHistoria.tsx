@@ -5,24 +5,27 @@ import { PERSONAJES_ASSETS } from '../assets/Personajes';
 
 const dialogos = [
   {
-    texto: 'Saludos, viajero. Soy Noh Ek, tu guía en este viaje.',
-    emisor: 'Noh Ek',
-    imagen: PERSONAJES_ASSETS.nohEk.neutral,
-  },
-  {
-    texto: 'El Valle de la Ansiedad es un lugar donde las emociones se sienten intensas y difíciles de manejar.',
     emisor: 'Noh Ek',
     imagen: PERSONAJES_ASSETS.nohEk.ansioso,
+    texto:
+      '¡Ayuda! La neblina en el Valle de la Ansiedad se está haciendo cada vez más densa y los pensamientos no me dejan ver el camino...',
   },
   {
-    texto: 'Tu misión es atravesar este valle, enfrentar situaciones desafiantes y recuperar tu equilibrio emocional.',
-    emisor: 'Noh Ek',
-    imagen: PERSONAJES_ASSETS.nohEk.sereno,
+    emisor: 'Ixchel',
+    imagen: PERSONAJES_ASSETS.ixchel.explicando,
+    texto:
+      'Tranquilo Noh Ek. Recuerda que la ansiedad nos hace creer que las cosas son peores de lo que realmente son. Para avanzar, Kuxtal debe aprender a escuchar y regular sus emociones.',
   },
   {
-    texto: 'Recuerda: cada elección que tomes afectará tu equilibrio. Elige con sabiduría y compasión.',
+    emisor: 'Ixchel',
+    imagen: PERSONAJES_ASSETS.ixchel.sonriendo,
+    texto:
+      'Kuxtal, te acompañaremos en este viaje. Si logras tomar decisiones con claridad, restauraremos el Equilibrio Emocional y obtendremos el Cristal de la Serenidad.',
+  },
+  {
     emisor: 'Noh Ek',
     imagen: PERSONAJES_ASSETS.nohEk.sereno,
+    texto: 'Inhalemos profundo... Estoy listo. ¡Vamos juntos al Valle!',
   },
 ];
 

@@ -1,8 +1,10 @@
-import { useEffect } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useJuegoStore } from '../store/useJuegoStore';
-import { finalizarNivel } from '../servicios/apiJuego';
-import { Gem, RotateCcw, Trophy, Heart, Brain, AlertTriangle } from 'lucide-react';
+import { finalizarNivel, obtenerMetricas } from '../servicios/apiJuego';
+import { RotateCcw, Trophy, Heart, Brain, AlertTriangle, Loader2 } from 'lucide-react';
 import confetti from 'canvas-confetti';
+import { OBJETOS_ASSETS } from '../assets/Objetos del Juego';
+import type { ResumenMetricas } from '../tipos/juego';
 
 const TOTAL_ACTIVIDADES = 3;
 
@@ -10,41 +12,86 @@ export default function EscenaResultados() {
   const { idJugador, nombreUsuario, progreso, tiempoInicioNivel, reiniciarJuego, cambiarEscena } =
     useJuegoStore();
 
-  const { equilibrioEmocional, respuestasCorrectas, eleccionesSaludables, erroresCometidos, cristalObtenido } =
-    progreso;
+  const [cargando, setCargando] = useState(true);
+  const [resumen, setResumen] = useState<ResumenMetricas | null>(null);
+  const envioFinalizacion = useRef(false);
 
-  const tiempoTotal = tiempoInicioNivel
-    ? Math.round((Date.now() - tiempoInicioNivel) / 1000)
-    : 0;
+  const [tiempoTotal] = useState(() =>
+    tiempoInicioNivel
+      ? Math.max(1, Math.round((Date.now() - tiempoInicioNivel) / 1000))
+      : 0,
+  );
 
   useEffect(() => {
-    if (idJugador) {
-      finalizarNivel(idJugador, tiempoTotal).catch(() => {});
+    if (!idJugador || envioFinalizacion.current) {
+      if (!idJugador) setCargando(false);
+      return;
     }
+    envioFinalizacion.current = true;
+
+    let cancelado = false;
+
+    (async () => {
+      try {
+        await finalizarNivel(idJugador, tiempoTotal);
+      } catch {
+        // Silenciar errores de red en el MVP
+      }
+
+      try {
+        const datos = await obtenerMetricas(idJugador);
+        if (!cancelado) setResumen(datos);
+      } catch {
+        // Silenciar errores de red en el MVP
+      } finally {
+        if (!cancelado) setCargando(false);
+      }
+    })();
+
+    return () => {
+      cancelado = true;
+    };
   }, [idJugador, tiempoTotal]);
 
+  const progresoResumen = resumen?.progreso ?? progreso;
+  const { equilibrioEmocional, respuestasCorrectas, eleccionesSaludables, erroresCometidos, cristalObtenido } =
+    progresoResumen;
+
   useEffect(() => {
-    if (cristalObtenido) {
-      const disparar = () => {
-        confetti({ particleCount: 80, spread: 70, origin: { y: 0.6 } });
-      };
-      disparar();
-      const timer = setTimeout(disparar, 400);
-      return () => clearTimeout(timer);
-    }
-  }, [cristalObtenido]);
+    if (cargando || !cristalObtenido) return;
+
+    const disparar = () => {
+      confetti({ particleCount: 80, spread: 70, origin: { y: 0.6 } });
+    };
+    disparar();
+    const timer = setTimeout(disparar, 400);
+    return () => clearTimeout(timer);
+  }, [cargando, cristalObtenido]);
 
   const handleReiniciar = () => {
     reiniciarJuego();
     cambiarEscena('inicio');
   };
 
+  if (cargando) {
+    return (
+      <div className="w-full flex flex-col items-center justify-center gap-4 py-20">
+        <Loader2 className="w-8 h-8 text-kuxtalTurquesa animate-spin" />
+        <p className="font-cuerpo text-sm text-gray-500">Calculando tus resultados...</p>
+      </div>
+    );
+  }
+
   return (
     <div className="w-full flex flex-col items-center gap-5 py-6">
       {cristalObtenido ? (
         <>
-          <div className="w-20 h-20 rounded-full bg-kuxtalAzulSerenidad/20 flex items-center justify-center animate-bounce">
-            <Gem className="w-10 h-10 text-kuxtalAzulSerenidad" />
+          <div className="w-28 h-28 mx-auto my-2 relative animate-pulse">
+            <img
+              src={OBJETOS_ASSETS.cristalSerenidad}
+              alt="Cristal de la Serenidad"
+              className="w-full h-full object-contain drop-shadow-[0_0_25px_rgba(38,166,154,0.8)]"
+            />
           </div>
           <h2 className="font-titulo text-xl tablet:text-2xl font-bold text-kuxtalVerde text-center">
             ¡Felicidades, {nombreUsuario}!
@@ -55,8 +102,12 @@ export default function EscenaResultados() {
         </>
       ) : (
         <>
-          <div className="w-20 h-20 rounded-full bg-kuxtalAnsiedad/20 flex items-center justify-center">
-            <AlertTriangle className="w-10 h-10 text-kuxtalAnsiedad" />
+          <div className="w-28 h-28 mx-auto my-2 relative">
+            <img
+              src={OBJETOS_ASSETS.nubePreocupacion}
+              alt="Nube de la Preocupación"
+              className="w-full h-full object-contain opacity-80"
+            />
           </div>
           <h2 className="font-titulo text-xl tablet:text-2xl font-bold text-gray-700 text-center">
             Sigue intentando, {nombreUsuario}

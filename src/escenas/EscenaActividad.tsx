@@ -85,6 +85,7 @@ export default function EscenaActividad() {
   const [indiceActual, setIndiceActual] = useState(0);
   const [opcionSeleccionada, setOpcionSeleccionada] = useState<number | null>(null);
   const [retroalimentacionVisible, setRetroalimentacionVisible] = useState(false);
+  const [tiempoInicioPregunta, setTiempoInicioPregunta] = useState(() => Date.now());
 
   const { idJugador, registrarRespuesta, cambiarEscena, finalizarNivel } = useJuegoStore();
 
@@ -100,14 +101,18 @@ export default function EscenaActividad() {
     registrarRespuesta(opcion.esCorrecta, opcion.esEstrategiaSaludable);
 
     if (idJugador) {
+      const tiempoInvertido = Math.max(
+        1,
+        Math.round((Date.now() - tiempoInicioPregunta) / 1000),
+      );
       try {
         await guardarRespuesta({
           idJugador,
           idActividad: actividad.idActividad,
-          respuestaSeleccionada: indiceOpcion,
+          respuestaSeleccionada: opcion.texto,
           esCorrecta: opcion.esCorrecta,
           esEstrategiaSaludable: opcion.esEstrategiaSaludable,
-          tiempoRespuestaSegundos: 0,
+          tiempoRespuestaSegundos: tiempoInvertido,
         });
       } catch {
         // Silenciar errores de red en el MVP
@@ -129,6 +134,7 @@ export default function EscenaActividad() {
     setIndiceActual(siguienteIndice);
     setOpcionSeleccionada(null);
     setRetroalimentacionVisible(false);
+    setTiempoInicioPregunta(Date.now());
   };
 
   const obtenerColorOpcion = (indice: number) => {
