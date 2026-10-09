@@ -6,11 +6,16 @@ import confetti from 'canvas-confetti';
 import { OBJETOS_ASSETS } from '../assets/Objetos del Juego';
 import type { ResumenMetricas } from '../tipos/juego';
 
-const TOTAL_ACTIVIDADES = 3;
-
 export default function EscenaResultados() {
-  const { idJugador, nombreUsuario, progreso, tiempoInicioNivel, reiniciarJuego, cambiarEscena } =
-    useJuegoStore();
+  const {
+    idJugador,
+    nombreUsuario,
+    progreso,
+    tiempoInicioNivel,
+    totalActividades,
+    reiniciarJuego,
+    cambiarEscena,
+  } = useJuegoStore();
 
   const [cargando, setCargando] = useState(true);
   const [resumen, setResumen] = useState<ResumenMetricas | null>(null);
@@ -136,7 +141,7 @@ export default function EscenaResultados() {
             <Trophy className="w-5 h-5 text-kuxtalTurquesa shrink-0" />
             <div>
               <span className="font-titulo text-lg font-bold text-kuxtalTurquesa block leading-tight">
-                {respuestasCorrectas}/{TOTAL_ACTIVIDADES}
+                {respuestasCorrectas}/{totalActividades}
               </span>
               <span className="font-cuerpo text-[10px] text-gray-400">Correctas</span>
             </div>

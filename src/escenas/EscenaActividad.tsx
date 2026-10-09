@@ -1,98 +1,56 @@
-import { useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
+import { Loader2, RefreshCw, CheckCircle, XCircle, MapPin } from 'lucide-react';
 import { useJuegoStore } from '../store/useJuegoStore';
-import { guardarRespuesta } from '../servicios/apiJuego';
+import { guardarRespuesta, obtenerActividades } from '../servicios/apiJuego';
 import type { ActividadEmocional } from '../tipos/juego';
-import { CheckCircle, XCircle } from 'lucide-react';
 import { CuadroDialogo } from '../componentes/CuadroDialogo';
 import { PERSONAJES_ASSETS } from '../assets/Personajes';
 
-const actividades: ActividadEmocional[] = [
-  {
-    idActividad: 1,
-    situacion: 'Tienes un examen importante mañana y sientes que no estás preparado. Tu corazón late rápido y no puedes dormir.',
-    opciones: [
-      {
-        texto: 'Respirar profundamente 10 veces y repasar lo que recuerdas tranquilamente',
-        esCorrecta: true,
-        esEstrategiaSaludable: true,
-        retroalimentacion: 'Respirar profundamente calma tu sistema nervioso. Es una excelente estrategia.',
-      },
-      {
-        texto: 'Seguir estudiando sin parar hasta el amanecer para cubrir todo',
-        esCorrecta: false,
-        esEstrategiaSaludable: false,
-        retroalimentacion: 'El agotamiento empeora la ansiedad. El descanso es parte del aprendizaje.',
-      },
-      {
-        texto: 'Ir a jugar videojuegos para no pensar en el examen',
-        esCorrecta: false,
-        esEstrategiaSaludable: false,
-        retroalimentacion: 'Evitar el problema puede darte alivio momentáneo, pero aumenta la ansiedad después.',
-      },
-    ],
-  },
-  {
-    idActividad: 2,
-    situacion: 'Tu mejor amigo(a) no te habló hoy en la escuela y parece enojado(a). Te sientes preocupado(a) y confundido(a).',
-    opciones: [
-      {
-        texto: 'En un momento tranquilo, preguntarle con sinceridad si está bien',
-        esCorrecta: true,
-        esEstrategiaSaludable: true,
-        retroalimentacion: 'La comunicación directa y respetuosa fortalece las relaciones.',
-      },
-      {
-        texto: 'Ignorar la situación y hacer como si nada hubiera pasado',
-        esCorrecta: false,
-        esEstrategiaSaludable: false,
-        retroalimentacion: 'Ignorar los problemas no los resuelve y puede generar más malentendidos.',
-      },
-      {
-        texto: 'Enfadarse y dejar de hablarle también',
-        esCorrecta: false,
-        esEstrategiaSaludable: false,
-        retroalimentacion: 'Reaccionar con enojo puede dañar la amistad. Hay formas más saludables de manejarlo.',
-      },
-    ],
-  },
-  {
-    idActividad: 3,
-    situacion: 'Te sientes abrumado por todas las tareas de la escuela. Sientes que no tienes tiempo para nada y el estrés no para.',
-    opciones: [
-      {
-        texto: 'Hacer una lista de prioridades, respirar y pedir ayuda si es necesario',
-        esCorrecta: true,
-        esEstrategiaSaludable: true,
-        retroalimentacion: 'Organizarte y pedir ayuda son estrategias muy efectivas contra el estrés.',
-      },
-      {
-        texto: 'No hacer nada porque no sabes por dónde empezar',
-        esCorrecta: false,
-        esEstrategiaSaludable: false,
-        retroalimentacion: 'La parálisis por overwhelm es común, pero un pequeño paso es mejor que ninguno.',
-      },
-      {
-        texto: 'Cerrar todo y acostarte a ver el celular todo el día',
-        esCorrecta: false,
-        esEstrategiaSaludable: false,
-        retroalimentacion: 'Huir del problema no lo resuelve. Pequeños pasos pueden hacer gran diferencia.',
-      },
-    ],
-  },
-];
-
 export default function EscenaActividad() {
+  const {
+    idJugador,
+    nivelActual,
+    registrarRespuesta,
+    cambiarEscena,
+    finalizarNivel,
+    setTotalActividades,
+  } = useJuegoStore();
+
+  const [actividades, setActividades] = useState<ActividadEmocional[]>([]);
+  const [cargando, setCargando] = useState(true);
+  const [error, setError] = useState('');
   const [indiceActual, setIndiceActual] = useState(0);
   const [opcionSeleccionada, setOpcionSeleccionada] = useState<number | null>(null);
   const [retroalimentacionVisible, setRetroalimentacionVisible] = useState(false);
   const [tiempoInicioPregunta, setTiempoInicioPregunta] = useState(() => Date.now());
 
-  const { idJugador, registrarRespuesta, cambiarEscena, finalizarNivel } = useJuegoStore();
+  const cargarActividades = useCallback(async () => {
+    if (!nivelActual) return;
+    setCargando(true);
+    setError('');
+    try {
+      const datos = await obtenerActividades(nivelActual.idNivel);
+      if (datos.length === 0) {
+        setError('Este nivel aún no tiene actividades disponibles.');
+      } else {
+        setActividades(datos);
+        setTotalActividades(datos.length);
+      }
+    } catch {
+      setError('No se pudieron cargar las actividades. Revisa la conexión con el servidor.');
+    } finally {
+      setCargando(false);
+    }
+  }, [nivelActual, setTotalActividades]);
+
+  useEffect(() => {
+    cargarActividades();
+  }, [cargarActividades]);
 
   const actividad = actividades[indiceActual];
 
   const handleSeleccionarOpcion = async (indiceOpcion: number) => {
-    if (opcionSeleccionada !== null) return;
+    if (!actividad || opcionSeleccionada !== null) return;
 
     setOpcionSeleccionada(indiceOpcion);
     setRetroalimentacionVisible(true);
@@ -150,6 +108,47 @@ export default function EscenaActividad() {
     return 'border-slate-600 opacity-50';
   };
 
+  if (!nivelActual) {
+    return (
+      <div className="flex flex-col items-center justify-center gap-4 py-20 px-6 text-center">
+        <p className="font-cuerpo text-sm text-gray-500">
+          Selecciona un nivel desde el mapa para comenzar.
+        </p>
+        <button
+          onClick={() => cambiarEscena('mapa')}
+          className="flex items-center gap-2 bg-kuxtalTurquesa hover:bg-teal-600 text-white font-titulo text-sm py-2.5 px-6 rounded-xl shadow transition-all"
+        >
+          <MapPin className="w-4 h-4" />
+          Ir al Mapa
+        </button>
+      </div>
+    );
+  }
+
+  if (cargando) {
+    return (
+      <div className="flex flex-col items-center justify-center gap-3 py-20">
+        <Loader2 className="w-7 h-7 text-kuxtalTurquesa animate-spin" />
+        <p className="font-cuerpo text-sm text-gray-500">Cargando actividades...</p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex flex-col items-center justify-center gap-4 py-20 px-6 text-center">
+        <p className="font-cuerpo text-sm text-red-500">{error}</p>
+        <button
+          onClick={cargarActividades}
+          className="flex items-center gap-2 bg-kuxtalTurquesa hover:bg-teal-600 text-white font-titulo text-sm py-2.5 px-6 rounded-xl shadow transition-all"
+        >
+          <RefreshCw className="w-4 h-4" />
+          Reintentar
+        </button>
+      </div>
+    );
+  }
+
   const imagenKuxtal = retroalimentacionVisible
     ? actividad.opciones[opcionSeleccionada!].esCorrecta
       ? PERSONAJES_ASSETS.kuxtal.happy
@@ -161,7 +160,7 @@ export default function EscenaActividad() {
       <div className="flex-1 flex flex-col gap-4">
         <div className="flex items-center justify-between">
           <span className="text-xs text-slate-400">
-            Situación {indiceActual + 1} de {actividades.length}
+            {nivelActual.nombre} · Situación {indiceActual + 1} de {actividades.length}
           </span>
         </div>
 

@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import type { EscenaActual, ProgresoNivel } from '../tipos/juego';
+import type { EscenaActual, NivelViaje, ProgresoNivel } from '../tipos/juego';
 
 const progresoInicial: ProgresoNivel = {
   equilibrioEmocional: 80,
@@ -15,12 +15,16 @@ interface JuegoState {
   escenaActual: EscenaActual;
   progreso: ProgresoNivel;
   tiempoInicioNivel: number | null;
+  nivelActual: NivelViaje | null;
+  totalActividades: number;
 
   setJugador: (id: string, nombre: string) => void;
   cambiarEscena: (escena: EscenaActual) => void;
   actualizarEquilibrio: (delta: number) => void;
-  registrarRespuesta: (correcta: boolean, saludable: boolean) => void;
+  registrarRespuesta: (esCorrecta: boolean, esEstrategiaSaludable: boolean) => void;
   finalizarNivel: (cristalObtenido: boolean) => void;
+  seleccionarNivel: (nivel: NivelViaje) => void;
+  setTotalActividades: (total: number) => void;
   reiniciarJuego: () => void;
 }
 
@@ -30,6 +34,8 @@ export const useJuegoStore = create<JuegoState>((set) => ({
   escenaActual: 'inicio',
   progreso: { ...progresoInicial },
   tiempoInicioNivel: null,
+  nivelActual: null,
+  totalActividades: 0,
 
   setJugador: (id, nombre) =>
     set({ idJugador: id, nombreUsuario: nombre }),
@@ -82,6 +88,10 @@ export const useJuegoStore = create<JuegoState>((set) => ({
       },
     })),
 
+  seleccionarNivel: (nivel) => set({ nivelActual: nivel }),
+
+  setTotalActividades: (total) => set({ totalActividades: total }),
+
   reiniciarJuego: () =>
     set({
       idJugador: null,
@@ -89,5 +99,7 @@ export const useJuegoStore = create<JuegoState>((set) => ({
       escenaActual: 'inicio',
       progreso: { ...progresoInicial },
       tiempoInicioNivel: null,
+      nivelActual: null,
+      totalActividades: 0,
     }),
 }));

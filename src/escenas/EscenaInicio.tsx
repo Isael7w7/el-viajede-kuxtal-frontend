@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useJuegoStore } from '../store/useJuegoStore';
 import { registrarJugador } from '../servicios/apiJuego';
 import { LOGOTIPOS_ASSETS } from '../assets/Logotipos';
+import { PERSONAJES_ASSETS } from '../assets/Personajes';
 
 export default function EscenaInicio() {
   const [nombre, setNombre] = useState('');
@@ -34,11 +35,16 @@ export default function EscenaInicio() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center gap-6 py-10 px-4">
+    <div className="flex flex-col items-center justify-center gap-5 py-8 px-4">
       <img
         src={LOGOTIPOS_ASSETS.principal}
         alt="El Viaje de Kuxtal"
-        className="w-44 tablet:w-52 object-contain"
+        className="w-40 tablet:w-48 object-contain"
+      />
+      <img
+        src={PERSONAJES_ASSETS.kuxtal.idle}
+        alt="Kuxtal"
+        className="w-36 tablet:w-40 object-contain drop-shadow-lg"
       />
 
       <div className="text-center">

@@ -34,3 +34,10 @@ export const PERSONAJES_ASSETS = {
 
 export type PersonajeId = keyof typeof PERSONAJES_ASSETS;
 export type Expresion<K extends PersonajeId> = keyof (typeof PERSONAJES_ASSETS)[K];
+
+export function obtenerSpritePersonaje(personaje: string, expresion: string): string {
+  const grupo = PERSONAJES_ASSETS[personaje as PersonajeId];
+  if (!grupo) return PERSONAJES_ASSETS.kuxtal.idle;
+  const sprite = (grupo as Record<string, string>)[expresion];
+  return sprite ?? Object.values(grupo)[0];
+}

@@ -1,4 +1,10 @@
-import type { DatosRespuesta, ResumenMetricas } from '../tipos/juego';
+import type {
+  ActividadEmocional,
+  DatosRespuesta,
+  DialogoHistoria,
+  NivelViaje,
+  ResumenMetricas,
+} from '../tipos/juego';
 
 const BASE_URL = 'http://localhost:3000/api';
 
@@ -40,4 +46,22 @@ export async function finalizarNivel(idJugador: string, tiempoTotalSegundos: num
 export async function obtenerMetricas(idJugador: string) {
   const respuesta = await fetch(`${BASE_URL}/metricas/resumen/${idJugador}`);
   return manejarRespuesta<ResumenMetricas>(respuesta);
+}
+
+export async function obtenerDialogos() {
+  const respuesta = await fetch(`${BASE_URL}/contenido/dialogos`);
+  return manejarRespuesta<DialogoHistoria[]>(respuesta);
+}
+
+export async function obtenerNiveles(idJugador?: string) {
+  const params = idJugador ? `?idJugador=${idJugador}` : '';
+  const respuesta = await fetch(`${BASE_URL}/contenido/niveles${params}`);
+  return manejarRespuesta<NivelViaje[]>(respuesta);
+}
+
+export async function obtenerActividades(idNivel: number) {
+  const respuesta = await fetch(
+    `${BASE_URL}/contenido/niveles/${idNivel}/actividades`,
+  );
+  return manejarRespuesta<ActividadEmocional[]>(respuesta);
 }

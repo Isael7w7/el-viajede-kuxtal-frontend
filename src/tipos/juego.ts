@@ -16,6 +16,25 @@ export interface ProgresoNivel {
 
 export type EscenaActual = 'inicio' | 'historia' | 'mapa' | 'actividad' | 'resultados';
 
+export interface NivelViaje {
+  idNivel: number;
+  orden: number;
+  nombre: string;
+  descripcion: string;
+  totalActividades: number;
+  desbloqueado: boolean;
+  completado: boolean;
+}
+
+export interface DialogoHistoria {
+  idDialogo: number;
+  orden: number;
+  emisor: string;
+  personaje: string;
+  expresion: string;
+  texto: string;
+}
+
 export interface OpcionActividad {
   texto: string;
   esCorrecta: boolean;
